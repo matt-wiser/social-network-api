@@ -36,8 +36,23 @@ const thoughtController = {
         });
     },
     // Update a single thought
-    updateThought(req, res) {
-        Thought.findByIdAndUpdate(req.params.thoughtId, {thoughtText: req.body.thoughtText}, {new:true})
+    updateThought({params, body}, res) {
+        Thought.findByIdAndUpdate(params.thoughtId, {thoughtText: body.thoughtText}, {new:true})
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({message: "No thought matching that id!"});
+            } else {
+                res.json(thoughtData)
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+    },
+    //Delete a thought
+    deleteThought ({params}, res) {
+        Thought.findByIdAndDelete(params.thoughtId)
         .then(thoughtData => {
             if (!thoughtData) {
                 res.status(404).json({message: "No thought matching that id!"});
