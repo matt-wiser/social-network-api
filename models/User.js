@@ -13,6 +13,9 @@ const FriendSchema = new Schema(
             required: true,
             minlength: 1
         }
+    }, 
+    {
+        _id: false
     }
 );
 
@@ -34,9 +37,9 @@ const UserSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            get: date => moment(date).format('DD-MM-YYYY')
+            get: date => moment(date).format('MM-DD-YYYY')
         },
-        Thoughts: [
+        thoughts: [
             {
                 type: Schema.Types.ObjectId,
                 ref: Thought
@@ -53,7 +56,7 @@ const UserSchema = new Schema(
     }
 );
 
-UserSchema.virtual('friendCount').get(()=> {
+UserSchema.virtual('friendCount').get(function () {
     return this.friends.length;
 });
 
