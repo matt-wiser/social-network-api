@@ -1,15 +1,32 @@
 const { User, Thought } = require("../models");
 
 const thoughtController = {
+    //Get all thoughts
+    getThoughts(req, res){
+        Thought.find({})
+            .populate({
+                path: "reactions",
+                select: '-__v'
+            })
+            .select('-__v')
+            .then(thoughtData => res.json(thoughtData))
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            });
+    },
     //Add a thought to a user
-    addThought({params, body}, res) {
-        Thought.create(body)
-        .then(({_id}) => {
+    async addThought({params, body}, res) {
+        User.findById(params.userId)
+        .then(userData =>{
+            return Thought.create({thoughtText: body.thoughtText, username: userData.username, userId: params.userId})
+        })
+        .then(thoughtData => {
             return User.findOneAndUpdate(
                 {_id: params.userId},
-                {$push: {thoughts: _id}},
+                {$push: {thoughts: thoughtData._id}},
                 {new: true}
-            );
+            )
         })
         .then(userData => {
             if (!userData) {
