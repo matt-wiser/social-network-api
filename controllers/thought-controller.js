@@ -15,6 +15,25 @@ const thoughtController = {
                 res.status(400).json(err);
             });
     },
+    getSingleThought ({params}, res) {
+        Thought.findById(params.thoughtId)
+        .populate({
+            path: "reactions",
+            select: '-__v'
+        })
+        .select('-__v')
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({message: "No thought matching that id!"});
+            } else {
+                res.json(thoughtData)
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+    },
     //Add a thought to a user
     async addThought({params, body}, res) {
         User.findById(params.userId)
