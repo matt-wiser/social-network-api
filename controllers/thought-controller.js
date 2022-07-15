@@ -15,6 +15,7 @@ const thoughtController = {
                 res.status(400).json(err);
             });
     },
+    //get a single thought
     getSingleThought ({params}, res) {
         Thought.findById(params.thoughtId)
         .populate({
@@ -22,6 +23,21 @@ const thoughtController = {
             select: '-__v'
         })
         .select('-__v')
+        .then(thoughtData => {
+            if (!thoughtData) {
+                res.status(404).json({message: "No thought matching that id!"});
+            } else {
+                res.json(thoughtData)
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
+    },
+    // Update a single thought
+    updateThought(req, res) {
+        Thought.findByIdAndUpdate(req.params.thoughtId, {thoughtText: req.body.thoughtText}, {new:true})
         .then(thoughtData => {
             if (!thoughtData) {
                 res.status(404).json({message: "No thought matching that id!"});
