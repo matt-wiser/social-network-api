@@ -2,23 +2,6 @@ const { Schema, model, Types } = require("mongoose");
 const moment = require("moment");
 const Thought = require("./Thought");
 
-const FriendSchema = new Schema(
-    {
-        friendId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId()
-        },
-        friendName: {
-            type: String,
-            required: true,
-            minlength: 1
-        }
-    }, 
-    {
-        _id: false
-    }
-);
-
 const UserSchema = new Schema(
     {
         username: {
