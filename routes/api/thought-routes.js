@@ -1,5 +1,14 @@
 const router = require("express").Router();
-const {getThoughts, getSingleThought, addThought, updateThought, deleteThought, addReaction, removeThought, removeReaction} = require('../controllers/thought-controller');
+const {
+    getThoughts, 
+    getSingleThought, 
+    addThought, 
+    updateThought, 
+    deleteThought, 
+    addReaction, 
+    removeThought, 
+    removeReaction
+} = require('../../controllers/thought-controller');
 
 router.route("/").get(getThoughts);
 router.route("/:thoughtId").get(getSingleThought);
