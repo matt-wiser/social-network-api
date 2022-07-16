@@ -50,21 +50,6 @@ const thoughtController = {
             res.status(400).json(err);
         });
     },
-    //Delete a thought
-    deleteThought ({params}, res) {
-        Thought.findByIdAndDelete(params.thoughtId)
-        .then(thoughtData => {
-            if (!thoughtData) {
-                res.status(404).json({message: "No thought matching that id!"});
-            } else {
-                res.json(thoughtData)
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(400).json(err);
-        });
-    },
     //Add a thought to a user
     async addThought({params, body}, res) {
         User.findById(params.userId)
@@ -81,6 +66,30 @@ const thoughtController = {
         .then(userData => {
             if (!userData) {
                 res.status(404).json({message: "No user matching that id!"});
+                return;
+            } else {
+                res.json(userData);
+            }
+        })
+        .catch(err => res.status(400).json(err));
+    },
+    //Remove a thought by id and remove a thought from its associated user by user id
+    deleteThought({params, body}, res) {
+        Thought.findOneAndDelete({_id: params.thoughtId})
+        .then(deletedThought => {
+            if (!deletedThought) {
+                return res.status(404).json({message: "No thought matching that id!"});
+            }
+
+            return User.findOneAndUpdate(
+                {_id: body.userId},
+                {$pull: {thoughts: params.thoughtId}},
+                {new: true}
+            );   
+        })
+        .then(userData => {
+            if (!userData) {
+                res.status(404).json({message: "No thought matching that id!"});
                 return;
             } else {
                 res.json(userData);
@@ -105,35 +114,12 @@ const thoughtController = {
         })
         .catch(err => res.status(400).json(err));
     },
-    //Remove a thought by id and remove a thought from its associated user by user id
-    removeThought({params, body}, res) {
-        Thought.findOneAndDelete({_id: params.thoughtId})
-        .then(deletedThought => {
-            if (!deletedThought) {
-                return res.status(404).json({message: "No thought matching that id!"});
-            }
-
-            return User.findOneAndUpdate(
-                {_id: params.userId},
-                {$pull: {thoughts: params.thoughtId}},
-                {new: true}
-            );   
-        })
-        .then(userData => {
-            if (!userData) {
-                res.status(404).json({message: "No thought matching that id!"});
-                return;
-            } else {
-                res.json(userData);
-            }
-        })
-        .catch(err => res.status(400).json(err));
-    },
     //Remove a reaction from a thought
     removeReaction({params, body}, res) {
         Thought.findOneAndUpdate(
             {_id: params.thoughtId},
-            {$pull: {reactions: {reactionId: params.reactionId}}}
+            {$pull: {reactions: {reactionId: body.reactionId}}},
+            {new: true}
         )
         .then(userData => {
             if (!userData) {
