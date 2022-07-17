@@ -85,7 +85,7 @@ const thoughtController = {
                 {_id: body.userId},
                 {$pull: {thoughts: params.thoughtId}},
                 {new: true}
-            );   
+            ); 
         })
         .then(userData => {
             if (!userData) {
