@@ -11,8 +11,8 @@ const {
 
 //Thought Routes
 router.route("/").get(getThoughts);
-router.route("/:thoughtId").get(getSingleThought);
 router.route("/:userId").post(addThought);
+router.route("/:thoughtId").get(getSingleThought);
 router.route("/:thoughtId").put(updateThought);
 router.route("/:thoughtId").delete(deleteThought);
 
