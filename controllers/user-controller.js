@@ -1,4 +1,4 @@
-const { User } = require("../models/");
+const { User, Thought } = require("../models/");
 
 const userController = {
     //Create a new user
@@ -57,7 +57,13 @@ const userController = {
     },
     // Delete a single user
     deleteUser({ params }, res) {
-        User.findOneAndDelete({_id: params.id})
+        User.findById(params.id)
+        .then(userData => {
+            return Thought.deleteMany({_id:{$in:userData.thoughts}})
+        })
+        .then(deletedThoughts =>{
+            return User.findOneAndDelete({_id: params.id});
+        })
         .then(userData => {
             if (!userData) {
                 res.status(404).json({message: "No user matching that id!"});
