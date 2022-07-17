@@ -10,7 +10,7 @@ Create a social media API using Express, mongodb, and mongoose ODM to provide CR
 * mongoose ODM
 * Insomnia for API querying
 
-## [Click Here for a Video Walkthrough](https://youtu.be/Y26aGVj3-qo)
+## [Click Here for a Video Walkthrough](https://www.youtube.com/watch?v=K5KKLs6fo58)
 
 
 ## Built By
